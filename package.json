@@ -1,0 +1,22 @@
+{
+  "name": "llm-validator",
+  "version": "1.0.0",
+  "description": "LLM Output Validator & Schema Enforcer",
+  "main": "src/server.js",
+  "type": "commonjs",
+  "scripts": {
+    "start": "node src/server.js",
+    "dev": "nodemon src/server.js"
+  },
+  "dependencies": {
+    "@google/generative-ai": "^0.24.1",
+    "cors": "^2.8.5",
+    "dotenv": "^16.3.1",
+    "express": "^4.18.2",
+    "zod": "^3.22.4",
+    "zod-to-json-schema": "^3.22.3"
+  },
+  "devDependencies": {
+    "nodemon": "^3.0.2"
+  }
+}

@@ -1,0 +1,141 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>LLM Validator</title>
+  <link rel="stylesheet" href="style.css" />
+  <link href="https://fonts.googleapis.com/css2?family=JetBrains+Mono:wght@400;500&family=Syne:wght@400;500;700&display=swap" rel="stylesheet">
+</head>
+<body>
+  <aside class="sidebar">
+    <div class="logo">
+      <span class="logo-icon">⬡</span>
+      <span class="logo-text">LLM<br>Validator</span>
+    </div>
+    <nav class="nav">
+      <button class="nav-btn active" data-tab="schemas"><span class="nav-icon">◈</span> Schemas</button>
+      <button class="nav-btn" data-tab="call"><span class="nav-icon">▷</span> Make a Call</button>
+      <button class="nav-btn" data-tab="failures"><span class="nav-icon">⚠</span> Failures</button>
+      <button class="nav-btn" data-tab="metrics"><span class="nav-icon">◉</span> Metrics</button>
+    </nav>
+    <div class="sidebar-footer">
+      <div class="status-dot" id="statusDot"></div>
+      <span id="statusText">checking...</span>
+    </div>
+  </aside>
+
+  <main class="main">
+
+    <section class="tab active" id="tab-schemas">
+      <div class="tab-header">
+        <h1>Schema Registry</h1>
+        <p class="subtitle">Define the JSON structure your LLM must return</p>
+      </div>
+      <div class="two-col">
+        <div class="card">
+          <h2>Register a Schema</h2>
+          <div class="field">
+            <label>Schema Name</label>
+            <input type="text" id="schemaName" placeholder="e.g. movie_review" />
+          </div>
+          <div class="field">
+            <label>Schema Definition <span class="hint">(JSON format)</span></label>
+            <textarea id="schemaDef" rows="12" placeholder='{ "properties": { ... }, "required": [...] }'></textarea>
+          </div>
+          <button class="btn btn-primary" onclick="registerSchema()">Register Schema ▷</button>
+          <div id="schemaMsg" class="msg"></div>
+          <hr class="divider" />
+          <h3>Quick Templates</h3>
+          <div class="templates">
+            <button class="template-btn" onclick="loadTemplate('movie')">🎬 Movie Review</button>
+            <button class="template-btn" onclick="loadTemplate('person')">👤 Person Info</button>
+            <button class="template-btn" onclick="loadTemplate('product')">📦 Product</button>
+          </div>
+        </div>
+        <div class="card">
+          <div class="card-header-row">
+            <h2>Registered Schemas</h2>
+            <button class="btn btn-sm" onclick="loadSchemas()">↻ Refresh</button>
+          </div>
+          <div id="schemaList" class="schema-list">
+            <div class="empty-state">No schemas yet.</div>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <section class="tab" id="tab-call">
+      <div class="tab-header">
+        <h1>Make a Validated Call</h1>
+        <p class="subtitle">Send a prompt — the system validates + auto-corrects the response</p>
+      </div>
+      <div class="two-col">
+        <div class="card">
+          <h2>Configure Call</h2>
+          <div class="field">
+            <label>Schema Name</label>
+            <input type="text" id="callSchemaName" placeholder="e.g. movie_review" />
+          </div>
+          <div class="field">
+            <label>Prompt</label>
+            <textarea id="callPrompt" rows="4" placeholder="Write a review for the movie Inception"></textarea>
+          </div>
+          <div class="field">
+            <label>Injection Strategy</label>
+            <select id="callStrategy">
+              <option value="json_instruction">JSON Instruction (append schema to prompt)</option>
+              <option value="few_shot">Few-Shot (show an example output)</option>
+              <option value="function_calling">Function Calling (structured)</option>
+            </select>
+          </div>
+          <div class="field">
+            <label>Model</label>
+            <input type="text" id="callModel" value="gemini-2.0-flash" />
+          </div>
+          <button class="btn btn-primary" id="callBtn" onclick="makeCall()">Run Validated Call ▷</button>
+          <div id="callMsg" class="msg"></div>
+        </div>
+        <div class="card">
+          <h2>Response</h2>
+          <div id="callResult" class="result-empty">
+            <span class="result-placeholder">▷ Run a call to see the result</span>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <section class="tab" id="tab-failures">
+      <div class="tab-header">
+        <h1>Failure Analysis</h1>
+        <p class="subtitle">See which schemas fail most and why</p>
+      </div>
+      <div class="card">
+        <div class="card-header-row">
+          <h2>Recent Failures</h2>
+          <button class="btn btn-sm" onclick="loadFailures()">↻ Refresh</button>
+        </div>
+        <div id="failureList" class="failure-list">
+          <div class="empty-state">No failures yet 🎉</div>
+        </div>
+      </div>
+    </section>
+
+    <section class="tab" id="tab-metrics">
+      <div class="tab-header">
+        <h1>Metrics</h1>
+        <p class="subtitle">Strategy performance and success rates</p>
+      </div>
+      <div id="metricsContent">
+        <div class="stats-grid" id="overallStats"></div>
+        <div class="card" style="margin-top:1.5rem">
+          <h2>Strategy Performance</h2>
+          <div id="strategyTable"></div>
+        </div>
+      </div>
+    </section>
+
+  </main>
+  <script src="app.js"></script>
+</body>
+</html>
