@@ -54,19 +54,16 @@ Node.js v18 or higher
 Google Gemini API key (free at https://aistudio.google.com/apikey)
 
 # Steps
-1. Clone the repository
-bashgit clone https://github.com/YOUR_USERNAME/llm-validator.git
-cd llm-validator
-2. Install dependencies
+1. Install dependencies
 bashnpm install
-3. Create your .env file
+2. Create your .env file
 bashcp .env.example .env
 Open .env and add your Gemini API key:
 GEMINI_API_KEY=AIzaSy_your_key_here
 PORT=3000
-4. Start the server
+3. Start the server
 bashnpm run dev
-5. Open the app
+4. Open the app
 http://localhost:3000
 
 # How to Use
